@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "614670110958",
+    "project_id": "marach-mobx-reminder-app",
+    "storage_bucket": "marach-mobx-reminder-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614670110958:android:a0d3ab24de420790f0e3ff",
+        "android_client_info": {
+          "package_name": "com.example.mobx_practice_course"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDIEZFckv4OKvcw9sMteo8QxuHlOfXV1E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
