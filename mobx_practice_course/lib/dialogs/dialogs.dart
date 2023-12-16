@@ -31,3 +31,9 @@ Future<bool?> deleteReminderDialog({required BuildContext context})
     content: 'Do you want to delete this reminder?',
     optionsBuilder: () => {'Cancel': false, 'Delete': true}
   ).then((value) => value ?? false);
+
+Future<T?> addReminderDialog<T>({required BuildContext context, required TextEditingController controller})
+  => showGenericDialog<T?>(
+    context: context, controller: controller, title: 'Add Reminder',
+    optionsBuilder: () => {'Cancel': false, 'Save': true}
+  ).then((value) => value);

@@ -4,14 +4,14 @@ typedef DialogOptions<T> = Map<String, T?> Function();
 
 Future<T?> showGenericDialog<T>({
   required BuildContext context, required String title, 
-  required String content, required DialogOptions optionsBuilder,
+  String? content, required DialogOptions optionsBuilder,
   TextEditingController? controller
 }){
   final options = optionsBuilder();
   return showDialog<T?>(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text(title), content: controller == null ? Text(content)
+      title: Text(title), content: controller == null ? Text(content ?? '')
       : TextField(
         controller: controller, autocorrect: true, maxLines: null,
         keyboardType: TextInputType.text, keyboardAppearance: Brightness.dark,
