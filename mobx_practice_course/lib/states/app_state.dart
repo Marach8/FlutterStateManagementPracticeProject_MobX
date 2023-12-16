@@ -59,7 +59,7 @@ abstract class _AppState with Store{
   }
 
   @action
-  Future<void> logOut() async{
+  Future<void> logOutUser() async{
     isLoading = true;
     try{
       await FirebaseAuth.instance.signOut();
@@ -110,7 +110,7 @@ abstract class _AppState with Store{
   }
 
   @action
-  Future<void> initialize() async{
+  Future<void> initializeApp() async{
     isLoading = true;
     currentUser = FirebaseAuth.instance.currentUser;
     if(currentUser != null){await loadReminders(); currentScreen = AppScreen.reminder;}
@@ -127,10 +127,17 @@ abstract class _AppState with Store{
   }
 
   @action 
-  Future<bool> register({required String email, required String password}) 
+  Future<bool> registerUser(String email, String password) 
     => loginOrRegister(
-      => FirebaseAuth.instance.createUserWithEmailAndPassword, 
-      email:email, password:password
+      FirebaseAuth.instance.createUserWithEmailAndPassword,
+      email, password
+    );
+
+  @action 
+  Future<bool> loginUser(String email, String password) 
+    => loginOrRegister(
+      FirebaseAuth.instance.signInWithEmailAndPassword,
+      email, password
     );
 }
 
@@ -141,6 +148,6 @@ abstract class _DocumentKeys {
   static const isDone = 'is_done';
 }
 
-typedef LoginOrRegisterFunction = Future<bool> Function({
+typedef LoginOrRegisterFunction = Future<UserCredential> Function({
   required String email, required String password
 });
