@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
-  runApp(const MyApp());
+  runApp(Provider(create: (_) => AppState().initializeApp, child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,39 +23,36 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) => AppState().initializeApp(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          appBarTheme: const AppBarTheme(backgroundColor: Colors.blue)
-        ),
-        home: ReactionBuilder(
-          builder: (context){
-            return autorun((_){
-              final isLoading = context.read<AppState>().isLoading;
-              if(isLoading){LoadingScreen().showOverlay(context: context, text: 'Loading...');}
-              else{LoadingScreen().hideOverlay();}
-
-              final authError = context.read<AppState>().error;
-              if(authError != null){authErrorDialog(context: context, error: authError);}
-            });
-          },
-          child: Observer(
-            name: 'currentScreen',
-            builder: (context){
-              switch(context.watch<AppState>().currentScreen){
-                case AppScreen.login:
-                  return const LoginView();
-                case AppScreen.register:
-                  return const RegisterView();
-                case AppScreen.reminder:
-                  return const MainReminderView();
-              }
-            }
-          )
-        )
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.blue)
       ),
+      home: ReactionBuilder(
+        builder: (context){
+          return autorun((_){
+            final isLoading = context.read<AppState>().isLoading;
+            if(isLoading){LoadingScreen().showOverlay(context: context, text: 'Loading...');}
+            else{LoadingScreen().hideOverlay();}
+    
+            final authError = context.read<AppState>().error;
+            if(authError != null){authErrorDialog(context: context, error: authError);}
+          });
+        },
+        child: Observer(
+          name: 'currentScreen',
+          builder: (context){
+            switch(context.watch<AppState>().currentScreen){
+              case AppScreen.login:
+                return const LoginView();
+              case AppScreen.register:
+                return const RegisterView();
+              case AppScreen.reminder:
+                return const MainReminderView();
+            }
+          }
+        )
+      )
     );
   }
 }
