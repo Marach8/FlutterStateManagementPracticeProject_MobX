@@ -117,9 +117,9 @@ mixin _$AppState on _AppState, Store {
       AsyncAction('_AppState.modifyIsDone', context: context);
 
   @override
-  Future<bool> modifyIsDone(Reminder reminder, bool isDone) {
+  Future<bool> modifyIsDone(String reminderId, bool isDone) {
     return _$modifyIsDoneAsyncAction
-        .run(() => super.modifyIsDone(reminder, isDone));
+        .run(() => super.modifyIsDone(reminderId, isDone));
   }
 
   late final _$loadRemindersAsyncAction =

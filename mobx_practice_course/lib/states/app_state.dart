@@ -79,19 +79,19 @@ abstract class _AppState with Store{
     isLoading = true;
     final userId = authProvider.userId;
     if(userId == null){isLoading = false; return false;}
-    final date = DateTime.now().toString();
+    final date = DateTime.now().toIso8601String();
     final reminderId = await remindersProvider.createReminder(userId, text, date);
     final reminder = Reminder(dateCreated: date, isDone: false, text: text, id: reminderId);
     reminders.add(reminder); isLoading = false; return true;
   }
 
   @action 
-  Future<bool> modifyIsDone(Reminder reminder, bool isDone) async{
+  Future<bool> modifyIsDone(ReminderId reminderId, bool isDone) async{
     isLoading = true;
     final userId = authProvider.userId;
     if(userId == null){isLoading = false; return false;}
-    await remindersProvider.modifyReminder(reminder.id, isDone, userId);
-    reminders.firstWhere((element) => element.id == reminder.id).isDone = isDone; isLoading = false; return true;
+    await remindersProvider.modifyReminder(reminderId, isDone, userId);
+    reminders.firstWhere((element) => element.id == reminderId).isDone = isDone; isLoading = false; return true;
   }
 
   @action 
