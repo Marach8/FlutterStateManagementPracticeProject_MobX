@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:mobx_practice_course/auth/auth_errors.dart';
 import 'package:mobx_practice_course/extension/extensions.dart';
@@ -24,7 +25,7 @@ abstract class _AppState with Store{
 
   @observable 
   AuthError? error;
-  
+
   ObservableList<Reminder> reminders = ObservableList<Reminder>();
 
   @computed 
@@ -98,7 +99,7 @@ abstract class _AppState with Store{
     final userId = currentUser?.uid;
     if(userId == null){isLoading = false; return false;}
     await FirebaseFirestore.instance.collection(userId).doc(reminder.id).update({_DocumentKeys.isDone: isDone});
-    reminders.firstWhere((element) => element.id == reminder.id).isDone = isDone; return true;
+    reminders.firstWhere((element) => element.id == reminder.id).isDone = isDone; isLoading = false; return true;
   }
 
   @action 
@@ -106,12 +107,14 @@ abstract class _AppState with Store{
     final userId = currentUser?.uid;
     if (userId == null){return false;}
     final collection = await FirebaseFirestore.instance.collection(userId).get();
-    final reminders = collection.docs.map((document) => Reminder(
-      dateCreated: document[_DocumentKeys.dateCreated] as String,
-      id: document.id,
-      text: document[_DocumentKeys.text] as String,
-      isDone: document[_DocumentKeys.isDone] as bool,
-    ));
+    final reminders = collection.docs.map((document) {
+      return Reminder(
+        dateCreated: document[_DocumentKeys.dateCreated] as String,
+        id: document.id,
+        text: document[_DocumentKeys.text] as String,
+        isDone: document[_DocumentKeys.isDone] as bool,
+      );
+    });
     this.reminders = ObservableList.of(reminders);
     return true;
   }
@@ -131,7 +134,7 @@ abstract class _AppState with Store{
     try {
       await func(email: email, password: password); 
       currentUser = FirebaseAuth.instance.currentUser;
-      return true;
+      await loadReminders(); return true;
     } 
     on FirebaseAuthException catch(e){error = AuthError.from(e); currentUser = null; return false;} 
     finally{isLoading = false; currentUser != null ? currentScreen = AppScreen.reminder: {};}

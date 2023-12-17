@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx_practice_course/dialogs/dialogs.dart';
 import 'package:mobx_practice_course/states/app_state.dart';
 import 'package:mobx_practice_course/views/popupmenu_view.dart';
@@ -52,26 +53,34 @@ class ReminderListView extends StatelessWidget {
           itemCount: appState.sortedReminders.length,
           itemBuilder: (context, listIndex){
             final reminder = appState.sortedReminders[listIndex];
-            return CheckboxListTile(
-              controlAffinity: ListTileControlAffinity.leading,
-              value: reminder.isDone,
-              onChanged: (isDone){
-                appState.modifyIsDone(reminder, isDone ?? false);
-                reminder.isDone = isDone ?? false;
-              },
-              title: Row(
-                children: [
-                  Expanded(child: Text(reminder.text)),
-                  IconButton(
-                    onPressed: () async => await deleteReminderDialog(context: context).then((value){
-                      if(value == null || value == false){return;}
-                      appState.deleteReminder(reminder);
-                    }), 
-                    icon: const Icon(Icons.delete_rounded)
-                  )
-                ],
-              ), 
-              //subtitle: Text(reminder.dateCreated.toString()),              
+            final date = DateTime.parse(reminder.dateCreated);
+            final formatedDate = DateFormat('EEEE dd, MMMM, yyyy hh:mm a').format(date);
+            return Observer(
+              builder: (context) => Card(
+                elevation: 10,
+                child: CheckboxListTile(
+                  controlAffinity: ListTileControlAffinity.leading,
+                  value: reminder.isDone,
+                  onChanged: (isDone){
+                    appState.modifyIsDone(reminder, isDone ?? false);
+                    reminder.isDone = isDone ?? false;
+                  },
+                  title: Row(
+                    children: [
+                      Expanded(child: Text(reminder.text)),
+                      IconButton(
+                        onPressed: () async => await deleteReminderDialog(context: context).then((value){
+                          if(value == null || value == false){return;}
+                          appState.deleteReminder(reminder);
+                        }), 
+                        icon: const Icon(Icons.delete_rounded)
+                      )
+                    ],
+                  ), 
+                  subtitle: Text(formatedDate), 
+                  tileColor: Colors.blueGrey.shade100           
+                ),
+              ),
             );
           }
         );
