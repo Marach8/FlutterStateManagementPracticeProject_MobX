@@ -65,22 +65,6 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  late final _$currentUserAtom =
-      Atom(name: '_AppState.currentUser', context: context);
-
-  @override
-  User? get currentUser {
-    _$currentUserAtom.reportRead();
-    return super.currentUser;
-  }
-
-  @override
-  set currentUser(User? value) {
-    _$currentUserAtom.reportWrite(value, super.currentUser, () {
-      super.currentUser = value;
-    });
-  }
-
   late final _$errorAtom = Atom(name: '_AppState.error', context: context);
 
   @override
@@ -217,7 +201,6 @@ mixin _$AppState on _AppState, Store {
 currentScreen: ${currentScreen},
 isLoading: ${isLoading},
 isVisible: ${isVisible},
-currentUser: ${currentUser},
 error: ${error},
 sortedReminders: ${sortedReminders}
     ''';
