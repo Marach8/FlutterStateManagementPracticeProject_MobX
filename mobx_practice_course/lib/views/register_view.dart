@@ -5,14 +5,15 @@ import 'package:mobx_practice_course/states/app_state.dart';
 import 'package:provider/provider.dart';
 
 class RegisterView extends HookWidget {
-  const RegisterView({super.key});
+  final bool obscureText;
+  const RegisterView({required this.obscureText, super.key});
 
   @override
   Widget build(BuildContext context) {
     final emailController = useTextEditingController(text: 'emma@gmail.com'.ifDebugging);
     final passwordController = useTextEditingController(text: 'emmanuel'.ifDebugging);
     return Scaffold(
-      appBar: AppBar(title: const Text('Login'), centerTitle: true),
+      appBar: AppBar(title: const Text('Register'), centerTitle: true),
       body: Column(
         children: [
           TextField(
@@ -25,10 +26,14 @@ class RegisterView extends HookWidget {
           ),
           TextField(
             controller: passwordController, keyboardAppearance: Brightness.dark,
-            obscureText: true, obscuringCharacter: '#',
-            decoration: const InputDecoration(
+            obscureText: obscureText, obscuringCharacter: '#',
+            decoration: InputDecoration(
               hintText: 'Enter your Password here.', 
-              prefix: Icon(Icons.edit)
+              prefix: const Icon(Icons.edit),
+              suffix: IconButton(
+                onPressed: () => context.read<AppState>().showPasswordField(),
+                icon: const Icon(Icons.visibility_outlined)
+              )
             )
           ),
           TextButton(

@@ -5,7 +5,8 @@ import 'package:mobx_practice_course/states/app_state.dart';
 import 'package:provider/provider.dart';
 
 class LoginView extends HookWidget {
-  const LoginView({super.key});
+  final bool obscureText;
+  const LoginView({required this.obscureText, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +26,15 @@ class LoginView extends HookWidget {
           ),
           TextField(
             controller: passwordController, keyboardAppearance: Brightness.dark,
-            obscureText: true, obscuringCharacter: '#',
-            decoration: const InputDecoration(
+            obscureText: obscureText, obscuringCharacter: '#',
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               hintText: 'Enter your Password here.', 
-              prefix: Icon(Icons.edit)
+              prefix: const Icon(Icons.edit),
+              suffix: IconButton(
+                onPressed: () => context.read<AppState>().showPasswordField(),
+                icon: const Icon(Icons.visibility_outlined)
+              )
             )
           ),
           TextButton(

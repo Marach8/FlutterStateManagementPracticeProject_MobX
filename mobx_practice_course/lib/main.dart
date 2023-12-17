@@ -45,13 +45,19 @@ class MyApp extends StatelessWidget {
             child: Observer(
               name: 'currentScreen',
               builder: (context){
+                final isVisible = context.watch<AppState>().isVisible;
                 switch(context.watch<AppState>().currentScreen){
-                  case AppScreen.login:
-                    return const LoginView();
-                  case AppScreen.register:
-                    return const RegisterView();
+                  case AppScreen.login when isVisible:
+                    return const LoginView(obscureText: true);
+                  case AppScreen.login when !isVisible:
+                    return const LoginView(obscureText: false);
+                  case AppScreen.register when isVisible:
+                    return const RegisterView(obscureText: true);
+                  case AppScreen.register when !isVisible:
+                    return const RegisterView(obscureText: false);
                   case AppScreen.reminder:
                     return const MainReminderView();
+                  default: return Container();
                 }
               }
             )

@@ -16,11 +16,15 @@ abstract class _AppState with Store{
   @observable 
   bool isLoading = false;
 
+  @observable
+  bool isVisible = false;
+
   @observable 
   User? currentUser;
 
   @observable 
   AuthError? error;
+  
   ObservableList<Reminder> reminders = ObservableList<Reminder>();
 
   @computed 
@@ -28,6 +32,9 @@ abstract class _AppState with Store{
 
   @action 
   void goToNewScreen(AppScreen newScreen) => currentScreen = newScreen;
+
+  @action 
+  void showPasswordField () => isVisible = !isVisible;
 
   @action 
   Future<bool> deleteReminder(Reminder reminder) async{
@@ -73,7 +80,7 @@ abstract class _AppState with Store{
     isLoading = true;
     final userId = currentUser?.uid;
     if(userId == null){isLoading = false; return false;}
-    final date = DateTime.now();
+    final date = DateTime.now().toString();
     final firebaseReminder = await FirebaseFirestore.instance.collection(userId).add(
       {
         _DocumentKeys.text: text,
@@ -100,7 +107,7 @@ abstract class _AppState with Store{
     if (userId == null){return false;}
     final collection = await FirebaseFirestore.instance.collection(userId).get();
     final reminders = collection.docs.map((document) => Reminder(
-      dateCreated: DateTime.parse(document[_DocumentKeys.dateCreated] as String),
+      dateCreated: document[_DocumentKeys.dateCreated] as String,
       id: document.id,
       text: document[_DocumentKeys.text] as String,
       isDone: document[_DocumentKeys.isDone] as bool,
@@ -121,9 +128,13 @@ abstract class _AppState with Store{
   @action
   Future<bool> loginOrRegister(LoginOrRegisterFunction func, String email, String password) async{
     error = null; isLoading = true;
-    try {await func(email: email, password: password); return true;} 
+    try {
+      await func(email: email, password: password); 
+      currentUser = FirebaseAuth.instance.currentUser;
+      return true;
+    } 
     on FirebaseAuthException catch(e){error = AuthError.from(e); currentUser = null; return false;} 
-    finally{isLoading = false; currentUser != null ? currentScreen = AppScreen.login: {};}
+    finally{isLoading = false; currentUser != null ? currentScreen = AppScreen.reminder: {};}
   }
 
   @action 

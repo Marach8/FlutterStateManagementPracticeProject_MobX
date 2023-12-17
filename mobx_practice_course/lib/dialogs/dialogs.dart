@@ -32,8 +32,8 @@ Future<bool?> deleteReminderDialog({required BuildContext context})
     optionsBuilder: () => {'Cancel': false, 'Delete': true}
   ).then((value) => value ?? false);
 
-Future<T?> addReminderDialog<T>({required BuildContext context, required TextEditingController controller})
-  => showGenericDialog<T?>(
+Future<dynamic> addReminderDialog({required BuildContext context, required TextEditingController controller})
+  => showGenericDialog<dynamic>(
     context: context, controller: controller, title: 'Add Reminder',
     optionsBuilder: () => {'Cancel': false, 'Save': true}
   ).then((value) => value);

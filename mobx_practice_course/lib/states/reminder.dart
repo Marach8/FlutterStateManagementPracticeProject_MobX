@@ -5,7 +5,7 @@ part 'reminder.g.dart';
 class Reminder = _Reminder with _$Reminder;
 
 abstract class _Reminder with Store{
-  final String id; final DateTime dateCreated;
+  final String id; final String dateCreated;
 
   @observable
   String text;

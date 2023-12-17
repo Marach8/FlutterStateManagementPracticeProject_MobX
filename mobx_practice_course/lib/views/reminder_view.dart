@@ -18,14 +18,15 @@ class MainReminderView extends HookWidget {
         actions: [
           IconButton(
             onPressed: () async{
-            await addReminderDialog(context: context, controller: reminderController)
-            .then((reminderContent){
-              if(reminderContent == null || reminderContent.runtimeType == bool){return;}
-              else if(reminderController.text.isNotEmpty){
-                context.read<AppState>().createReminder(reminderContent.text);
-              }
-              else {return;}
-            });              
+              reminderController.clear();
+              await addReminderDialog(context: context, controller: reminderController)
+              .then((reminderContent){
+                if(reminderContent == null || reminderContent.runtimeType == bool){return;}
+                else if(reminderController.text.isNotEmpty){
+                  context.read<AppState>().createReminder(reminderContent);
+                }
+                else {return;}
+              });              
             }, 
             icon: const Icon(Icons.add)
           ),
