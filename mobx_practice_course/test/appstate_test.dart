@@ -18,7 +18,6 @@ void main(){
     expect(appState.reminders.isEmpty, true);
   });
   
-
   test('Going to other Screens', (){
     appState.goToNewScreen(AppScreen.register);
     expect(appState.currentScreen, AppScreen.register);
@@ -30,7 +29,11 @@ void main(){
     expect(appState.currentScreen, AppScreen.login);
   });
 
-  
+  test('Making the password field to be visible and not visible', (){
+    appState.showPasswordField();
+    expect(appState.isVisible, true);
+  });
+
   test('Initializing the AppState when there is a current user', () async{
     await appState.initializeApp();
     expect(appState.reminders.length, mockReminders.length);
@@ -74,7 +77,7 @@ void main(){
     expect(appState.currentScreen, AppScreen.login);
   });
 
-  test("Loggin Out a User", () async{
+  test("Logging Out a User", () async{
     await appState.initializeApp();
     await appState.logOutUser();
     expect(appState.reminders.isEmpty, true);
