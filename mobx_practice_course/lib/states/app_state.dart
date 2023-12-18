@@ -91,7 +91,8 @@ abstract class _AppState with Store{
     final userId = authProvider.userId;
     if(userId == null){isLoading = false; return false;}
     await remindersProvider.modifyReminder(reminderId, isDone, userId);
-    reminders.firstWhere((element) => element.id == reminderId).isDone = isDone; isLoading = false; return true;
+    reminders.firstWhere((element) => element.id == reminderId).isDone = isDone; 
+    isLoading = false; return true;
   }
 
   @action 
