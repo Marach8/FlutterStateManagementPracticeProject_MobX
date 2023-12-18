@@ -148,6 +148,25 @@ mixin _$AppState on _AppState, Store {
         .run(() => super.loginOrRegister(func, email, password));
   }
 
+  late final _$uploadImagetoRemoteAsyncAction =
+      AsyncAction('_AppState.uploadImagetoRemote', context: context);
+
+  @override
+  Future<bool> uploadImagetoRemote(
+      {required String filePath, required String forReminderId}) {
+    return _$uploadImagetoRemoteAsyncAction.run(() => super
+        .uploadImagetoRemote(filePath: filePath, forReminderId: forReminderId));
+  }
+
+  late final _$getReminderImageAsyncAction =
+      AsyncAction('_AppState.getReminderImage', context: context);
+
+  @override
+  Future<Uint8List?> getReminderImage({required String reminderId}) {
+    return _$getReminderImageAsyncAction
+        .run(() => super.getReminderImage(reminderId: reminderId));
+  }
+
   late final _$_AppStateActionController =
       ActionController(name: '_AppState', context: context);
 

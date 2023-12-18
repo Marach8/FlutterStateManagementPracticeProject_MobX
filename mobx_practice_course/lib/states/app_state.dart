@@ -1,9 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:mobx/mobx.dart';
 import 'package:mobx_practice_course/auth/auth_errors.dart';
 import 'package:mobx_practice_course/extension/extensions.dart';
 import 'package:mobx_practice_course/provider/auth_provider.dart';
 import 'package:mobx_practice_course/provider/reminders_provider.dart';
 import 'package:mobx_practice_course/states/reminder.dart';
+import 'package:mobx_practice_course/uploadimages.dart';
 
 
 part 'app_state.g.dart';
@@ -81,7 +85,9 @@ abstract class _AppState with Store{
     if(userId == null){isLoading = false; return false;}
     final date = DateTime.now().toIso8601String();
     final reminderId = await remindersProvider.createReminder(userId, text, date);
-    final reminder = Reminder(dateCreated: date, isDone: false, text: text, id: reminderId);
+    final reminder = Reminder(
+      dateCreated: date, isDone: false, text: text, id: reminderId, hasImage: false
+    );
     reminders.add(reminder); isLoading = false; return true;
   }
 
@@ -130,6 +136,31 @@ abstract class _AppState with Store{
   @action 
   Future<bool> loginUser(String email, String password) 
     => loginOrRegister(authProvider.login, email, password);
+
+
+  @action 
+  Future<bool> uploadImagetoRemote({required String filePath, required ReminderId forReminderId}) async{
+    final userId = authProvider.userId;
+    if(userId == null){return false;}
+    final reminder = reminders.firstWhere((element) => element.id == forReminderId);
+    reminder.imageIsLoading = true; final file = File(filePath);
+    final imageId = await uploadImage(file: file, userId: userId, imageId: forReminderId);
+    if(imageId == null){reminder.imageIsLoading == false; return false;} 
+    await remindersProvider.setReminderImageStatus(forReminderId, userId);
+    reminder.imageIsLoading = false; reminder.hasImage = true;
+    return true;
+  }
+
+  @action
+  Future<Uint8List?> getReminderImage({required ReminderId reminderId}) async{
+    final userId = authProvider.userId;
+    if(userId == null){return null;}
+    final reminder = reminders.firstWhere((element) => element.id == reminderId);
+    final localImageData = reminder.imageData;
+    if(localImageData != null){return localImageData;}
+    final image = await remindersProvider.getReminderImage(reminderId, userId);
+    reminder.imageData = image; return image;
+  }
 }
 
 

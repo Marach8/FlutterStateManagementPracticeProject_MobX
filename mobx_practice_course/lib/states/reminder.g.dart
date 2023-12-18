@@ -39,11 +39,62 @@ mixin _$Reminder on _Reminder, Store {
     });
   }
 
+  late final _$hasImageAtom =
+      Atom(name: '_Reminder.hasImage', context: context);
+
+  @override
+  bool get hasImage {
+    _$hasImageAtom.reportRead();
+    return super.hasImage;
+  }
+
+  @override
+  set hasImage(bool value) {
+    _$hasImageAtom.reportWrite(value, super.hasImage, () {
+      super.hasImage = value;
+    });
+  }
+
+  late final _$imageDataAtom =
+      Atom(name: '_Reminder.imageData', context: context);
+
+  @override
+  Uint8List? get imageData {
+    _$imageDataAtom.reportRead();
+    return super.imageData;
+  }
+
+  @override
+  set imageData(Uint8List? value) {
+    _$imageDataAtom.reportWrite(value, super.imageData, () {
+      super.imageData = value;
+    });
+  }
+
+  late final _$imageIsLoadingAtom =
+      Atom(name: '_Reminder.imageIsLoading', context: context);
+
+  @override
+  bool get imageIsLoading {
+    _$imageIsLoadingAtom.reportRead();
+    return super.imageIsLoading;
+  }
+
+  @override
+  set imageIsLoading(bool value) {
+    _$imageIsLoadingAtom.reportWrite(value, super.imageIsLoading, () {
+      super.imageIsLoading = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 text: ${text},
-isDone: ${isDone}
+isDone: ${isDone},
+hasImage: ${hasImage},
+imageData: ${imageData},
+imageIsLoading: ${imageIsLoading}
     ''';
   }
 }

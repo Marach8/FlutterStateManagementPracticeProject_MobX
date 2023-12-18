@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:mobx/mobx.dart';
 part 'reminder.g.dart';
 
@@ -13,7 +15,19 @@ abstract class _Reminder with Store{
   @observable 
   bool isDone;
 
-  _Reminder({required this.text, required this.isDone, required this.id, required this.dateCreated});
+  @observable
+  bool hasImage;
+
+  @observable 
+  Uint8List? imageData;
+
+  @observable 
+  bool imageIsLoading;
+
+  _Reminder({
+    required this.text, required this.isDone, required this.id, 
+    required this.hasImage, required this.dateCreated
+    }): imageIsLoading = false;
 
   @override 
   bool operator ==(covariant _Reminder other) => id == other.id 
