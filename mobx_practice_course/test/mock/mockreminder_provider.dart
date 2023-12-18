@@ -30,7 +30,7 @@ class MockReminderProvider implements RemindersProvider{
   Future<void> deleteReminderWithId(ReminderId id, String userId) => Future.delayed(oneSecond);
 
   @override
-  Future<Iterable<Reminder>> loadReminders(String userId) => mockReminders.toFuture(oneSecond);
+  Future<Iterable<Reminder>> loadReminder(String userId) => mockReminders.toFuture(oneSecond);
 
   @override
   Future<void> modifyReminder(ReminderId id, bool isDone, String userId) => Future.delayed(oneSecond);

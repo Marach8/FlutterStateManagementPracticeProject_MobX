@@ -14,7 +14,7 @@ abstract class RemindersProvider {
 
   Future<void> modifyReminder(ReminderId id, bool isDone, String userId);
 
-  Future<Iterable<Reminder>> loadReminders(String userId);
+  Future<Iterable<Reminder>> loadReminder(String userId);
 }
 
 
@@ -51,7 +51,7 @@ class FireStoreReminderProvider implements RemindersProvider{
   }
 
   @override
-  Future<Iterable<Reminder>> loadReminders(String userId) async{
+  Future<Iterable<Reminder>> loadReminder(String userId) async{
     final collection = await FirebaseFirestore.instance.collection(userId).get();
     final reminders = collection.docs.map((document) {
       return Reminder(

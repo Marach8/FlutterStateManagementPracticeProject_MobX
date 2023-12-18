@@ -99,7 +99,7 @@ abstract class _AppState with Store{
   Future<bool> loadReminders() async{
     final userId = authProvider.userId;
     if (userId == null){return false;}
-    final reminders = await remindersProvider.loadReminders(userId);
+    final reminders = await remindersProvider.loadReminder(userId);
     this.reminders = ObservableList.of(reminders);
     return true;
   }
@@ -107,7 +107,7 @@ abstract class _AppState with Store{
   @action
   Future<void> initializeApp() async{
     isLoading = true;
-    final userId= authProvider.userId;
+    final userId = authProvider.userId;
     if(userId != null){await loadReminders(); currentScreen = AppScreen.reminder;}
     else{currentScreen = AppScreen.login;}
     isLoading = false;
