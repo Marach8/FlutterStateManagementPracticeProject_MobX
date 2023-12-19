@@ -6,8 +6,9 @@ import 'package:mobx_practice_course/dialogs/dialogs.dart';
 import 'package:mobx_practice_course/extension/extensions.dart';
 import 'package:mobx_practice_course/firebase_options.dart';
 import 'package:mobx_practice_course/loadscreen/loading_screen.dart';
-import 'package:mobx_practice_course/provider/auth_provider.dart';
-import 'package:mobx_practice_course/provider/reminders_provider.dart';
+import 'package:mobx_practice_course/services/auth_service.dart';
+import 'package:mobx_practice_course/services/image_upload_service.dart';
+import 'package:mobx_practice_course/services/reminders_service.dart';
 import 'package:mobx_practice_course/states/app_state.dart';
 import 'package:mobx_practice_course/views/login_view.dart';
 import 'package:mobx_practice_course/views/register_view.dart';
@@ -27,8 +28,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider<AppState>(
       create: (_) => AppState(
-        authProvider: FirebaseAuthProvider(), 
-        remindersProvider: FireStoreReminderProvider()
+        authProvider: FirebaseAuthService(), 
+        remindersProvider: FirebaseReminderService(),
+        imageUploadService: FirebaseImageUploadService()
       )..initializeApp(),
       builder: (context, child){
         return  MaterialApp(

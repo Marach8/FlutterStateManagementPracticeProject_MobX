@@ -1,30 +1,10 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:mobx_practice_course/providers/reminder_provider.dart';
 import 'package:mobx_practice_course/states/reminder.dart';
 
-//This entire file is to make the Application testatble
-
-typedef ReminderId = String;
-
-abstract class RemindersProvider {
-  Future<void> deleteReminderWithId(ReminderId id, String userId);
-
-  Future<void> deleteAllDocuments(String userId);
-
-  Future<ReminderId> createReminder(String userId, String text, String dateCreated);
-
-  Future<void> modifyReminder(ReminderId id, bool isDone, String userId);
-
-  Future<Iterable<Reminder>> loadReminder(String userId);
-
-  Future<void> setReminderImageStatus(ReminderId reminderId, String userId);
-
-  Future<Uint8List?> getReminderImage(ReminderId reminderId, String userId);
-}
-
-
-class FireStoreReminderProvider implements RemindersProvider{
+class FirebaseReminderService implements RemindersService{
   @override
   Future<ReminderId> createReminder(String userId, String text, String dateCreated) async{
     final firebaseReminder = await FirebaseFirestore.instance.collection(userId).add(

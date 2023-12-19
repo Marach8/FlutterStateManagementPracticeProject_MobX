@@ -1,13 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobx_practice_course/extension/extensions.dart';
 import 'package:mobx_practice_course/states/app_state.dart';
-import 'mock/mockauth_provider.dart';
-import 'mock/mockreminder_provider.dart';
+import 'mock/mock_auth_service.dart';
+import 'mock/mock_image_upload_sevice.dart';
+import 'mock/mock_reminder_service.dart';
 
 void main(){
   late AppState appState;
   setUp((){
-    appState = AppState(authProvider: MockAuthProvider(), remindersProvider: MockReminderProvider());
+    appState = AppState(
+      authProvider: MockAuthService(), 
+      remindersProvider: MockReminderService(),
+      imageUploadService: MockImageUploadService()
+    );
   });
 
   test('Testing the initial states of AppState', (){

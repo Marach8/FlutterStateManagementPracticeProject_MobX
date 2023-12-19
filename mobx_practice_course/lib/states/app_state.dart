@@ -1,13 +1,11 @@
-import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:mobx/mobx.dart';
 import 'package:mobx_practice_course/auth/auth_errors.dart';
 import 'package:mobx_practice_course/extension/extensions.dart';
-import 'package:mobx_practice_course/provider/auth_provider.dart';
-import 'package:mobx_practice_course/provider/reminders_provider.dart';
+import 'package:mobx_practice_course/providers/auth_provider.dart';
+import 'package:mobx_practice_course/providers/image_upload_provider.dart';
+import 'package:mobx_practice_course/providers/reminder_provider.dart';
 import 'package:mobx_practice_course/states/reminder.dart';
-import 'package:mobx_practice_course/uploadimages.dart';
 
 
 part 'app_state.g.dart';
@@ -15,9 +13,12 @@ part 'app_state.g.dart';
 class AppState = _AppState with _$AppState;
 
 abstract class _AppState with Store{
-  final RemindersProvider remindersProvider;
-  final AuthProvider authProvider;
-  _AppState({required this.remindersProvider, required this.authProvider});
+  final RemindersService remindersProvider;
+  final AuthService authProvider;
+  final ImageUploadService imageUploadService;
+  _AppState({
+    required this.imageUploadService, required this.remindersProvider, required this.authProvider
+  });
 
 
   @observable 
@@ -143,8 +144,8 @@ abstract class _AppState with Store{
     final userId = authProvider.userId;
     if(userId == null){return false;}
     final reminder = reminders.firstWhere((element) => element.id == forReminderId);
-    reminder.imageIsLoading = true; final file = File(filePath);
-    final imageId = await uploadImage(file: file, userId: userId, imageId: forReminderId);
+    reminder.imageIsLoading = true;
+    final imageId = await imageUploadService.uploadImage(filePath: filePath, userId: userId, imageId: forReminderId);
     if(imageId == null){reminder.imageIsLoading == false; return false;} 
     await remindersProvider.setReminderImageStatus(forReminderId, userId);
     reminder.imageIsLoading = false; reminder.hasImage = true;

@@ -1,18 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobx_practice_course/auth/auth_errors.dart';
+import 'package:mobx_practice_course/providers/auth_provider.dart';
 
 
 //This entire file is to make the Application testatble
 
-abstract class AuthProvider{
-  String? get userId; Future<bool> deleteAcccountAndSignOut();
-  Future<void> signOut(); 
-  Future<bool> register({required String email, required String password});
-  Future<bool> login({required String email, required String password});
-  }
 
-
-  class FirebaseAuthProvider implements AuthProvider{
+  class FirebaseAuthService implements AuthService{
   @override
   Future<bool> deleteAcccountAndSignOut() async{
     final user = FirebaseAuth.instance.currentUser;
