@@ -88,4 +88,44 @@ void main(){
     expect(appState.reminders.isEmpty, true);
     expect(appState.currentScreen, AppScreen.login);
   });
+
+  test('Uploading Image for a reminder', () async{
+    await appState.initializeApp();
+    final reminder = appState.reminders.firstWhere((element) => element.id == mockReminder1Id);
+    reminder.hasImage.expectFalse();
+    reminder.imageData.expectNull();
+    final didUploadImage = await appState.uploadImagetoRemote(
+      filePath: 'image-path', forReminderId: reminder.id
+    );
+    didUploadImage.expectTrue();
+    reminder.hasImage.expectTrue();
+    reminder.imageData.expectNull();
+    final image = await appState.getReminderImage(reminderId: reminder.id);
+    image.expectNotNull();
+    image!.isEqualTo(mockImageData1).expectTrue();
+  });
+}
+
+
+
+
+extension NullExpectation on Object? {
+  void expectNull() => expect(this, isNull);
+  void expectNotNull() => expect(this, isNotNull);
+}
+
+extension BoolExpectation on Object? {
+  void expectTrue() => expect(this, true);
+  void expectFalse() => expect(this, false);
+}
+
+extension Comparison<E> on List<E>{
+  bool isEqualTo(List<E> other){
+    if(identical(this, other)){return true;}
+    if(length != other.length){return false;}
+    for(var i = 0; i < length; i++){
+      if(this[i] != other[i]){return false;}
+    } 
+    return true;
+  }
 }
